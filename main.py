@@ -39,13 +39,13 @@ def root():
 
 
 @app.post("/palagina/login")
-async def palagina_login(payload: LoginPayload, headless: bool = Query(True)):
+async def palagina_login(payload: LoginPayload, headless: bool = Query(False)):
     return await palagina_login_worker(payload=payload, headless=headless)
 
 
 @app.post("/palagina/nuovo-progetto")
 async def palagina_nuovo_progetto(
     payload: NuovoProgettoPayload,
-    headless: bool = Query(True),
+    headless: bool = Query(False),
 ):
     return await palagina_nuovo_progetto_worker(payload=payload, headless=headless)
