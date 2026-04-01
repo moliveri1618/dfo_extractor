@@ -51,12 +51,6 @@ class NuovoProgettoPayload(BaseModel):
     zanzariere: List[Zanzariera]
 
 
-class LoginPayload(BaseModel):
-    username: str
-    password: str
-    remember: bool = False
-
-
 EXAMPLE_NUOVO_PROGETTO = {
     "testata": {
         "numero": "9795",
