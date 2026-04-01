@@ -1,12 +1,23 @@
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from schemas import LoginPayload, NuovoProgettoPayload
-from palagina_worker import palagina_login_worker, palagina_nuovo_progetto_worker
 from db import engine
 from models import Base
 
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
+
+#######################################################################################
+#### just for local, in prod lambda invoke the workers directly and remove this #######
+#######################################################################################
+import sys
+
+sys.path.append("/Users/mauro/Documents/plawright_worker")
+from palagina_worker import palagina_login_worker, palagina_nuovo_progetto_worker
+
+#######################################################################################
+#######################################################################################
+#######################################################################################
 
 
 app.add_middleware(
