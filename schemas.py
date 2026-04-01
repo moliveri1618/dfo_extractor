@@ -51,6 +51,8 @@ class NuovoProgettoPayload(BaseModel):
     zanzariere: List[Zanzariera]
 
 
+
+
 EXAMPLE_NUOVO_PROGETTO = {
     "testata": {
         "numero": "9795",

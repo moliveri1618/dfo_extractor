@@ -1,10 +1,13 @@
-from fastapi import FastAPI, Query, Body, Depends
+from fastapi import FastAPI, HTTPException, Query, Body, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from schemas import NuovoProgettoPayload, EXAMPLE_NUOVO_PROGETTO
 from db import engine, Base
 from dependencies import get_db
 from state_service import get_palagina_storage_state, save_palagina_storage_state
+from lock_service import acquire_lock, release_lock, renew_lock, get_lock_status
+from schemas_lock import ReleaseLockPayload, RenewLockPayload
+import asyncio
 
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
@@ -31,6 +34,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+PALAGINA_CREATE_LOCK_NAME = "palagina_nuovo_progetto_create"
+LOCK_LEASE_SECONDS = 120
+RELEASE_URL = "http://127.0.0.1:8000/locks/release"
 
 @app.post("/palagina/nuovo-progetto")
 async def palagina_nuovo_progetto(
@@ -40,10 +46,25 @@ async def palagina_nuovo_progetto(
 ):
     storage_state = get_palagina_storage_state(db)
 
+    acquired, owner_id = acquire_lock(
+        db=db,
+        lock_name=PALAGINA_CREATE_LOCK_NAME,
+        lease_seconds=LOCK_LEASE_SECONDS,
+    )
+
+    if not acquired or not owner_id:
+        raise HTTPException(
+            status_code=409,
+            detail="Another Palagina create-project flow is already in progress.",
+        )
+
     result = await palagina_nuovo_progetto_worker(
         payload=payload,
         headless=headless,
         storage_state=storage_state,
+        lock_name=PALAGINA_CREATE_LOCK_NAME,
+        owner_id=owner_id,
+        release_url=RELEASE_URL,
     )
 
     updated_storage_state = result.get("updated_storage_state")
@@ -51,3 +72,52 @@ async def palagina_nuovo_progetto(
         save_palagina_storage_state(db, updated_storage_state)
 
     return result
+
+
+@app.post("/locks/release")
+def release_lock_endpoint(
+    payload: ReleaseLockPayload,
+    db: Session = Depends(get_db),
+):
+    ok = release_lock(
+        db=db,
+        lock_name=payload.lock_name,
+        owner_id=payload.owner_id,
+    )
+
+    if not ok:
+        raise HTTPException(
+            status_code=404,
+            detail="Lock not found, expired, or owner_id mismatch.",
+        )
+
+    return {"success": True}
+
+
+@app.post("/locks/renew")
+def renew_lock_endpoint(
+    payload: RenewLockPayload,
+    db: Session = Depends(get_db),
+):
+    ok = renew_lock(
+        db=db,
+        lock_name=payload.lock_name,
+        owner_id=payload.owner_id,
+        lease_seconds=payload.lease_seconds,
+    )
+
+    if not ok:
+        raise HTTPException(
+            status_code=404,
+            detail="Lock not found, expired, or owner_id mismatch.",
+        )
+
+    return {"success": True}
+
+
+@app.get("/locks/status")
+def lock_status(
+    lock_name: str = Query(...),
+    db: Session = Depends(get_db),
+):
+    return get_lock_status(db, lock_name)
