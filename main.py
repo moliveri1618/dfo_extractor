@@ -7,6 +7,8 @@ from models import Base
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
 
+
+
 #######################################################################################
 #### just for local, in prod lambda invoke the workers directly and remove this #######
 #######################################################################################
@@ -18,6 +20,8 @@ from palagina_worker import palagina_login_worker, palagina_nuovo_progetto_worke
 #######################################################################################
 #######################################################################################
 #######################################################################################
+
+
 
 
 app.add_middleware(
@@ -35,7 +39,7 @@ def root():
 
 
 @app.post("/palagina/login")
-async def palagina_login(payload: LoginPayload, headless: bool = Query(False)):
+async def palagina_login(payload: LoginPayload, headless: bool = Query(True)):
     return await palagina_login_worker(payload=payload, headless=headless)
 
 
