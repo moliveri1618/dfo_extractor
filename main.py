@@ -29,10 +29,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/palagina/login")
-async def palagina_login(payload: LoginPayload, headless: bool = Query(False)):
-    return await palagina_login_worker(payload=payload, headless=headless)
-
 
 @app.post("/palagina/nuovo-progetto")
 async def palagina_nuovo_progetto(
