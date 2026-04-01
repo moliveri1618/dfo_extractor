@@ -1,12 +1,11 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Body
 from fastapi.middleware.cors import CORSMiddleware
-from schemas import LoginPayload, NuovoProgettoPayload
+from schemas import LoginPayload, NuovoProgettoPayload, EXAMPLE_NUOVO_PROGETTO
 from db import engine
 from models import Base
 
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
-
 
 
 #######################################################################################
@@ -22,8 +21,6 @@ from palagina_worker import palagina_login_worker, palagina_nuovo_progetto_worke
 #######################################################################################
 
 
-
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -32,12 +29,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.get("/")
-def root():
-    return {"ok": True}
-
-
 @app.post("/palagina/login")
 async def palagina_login(payload: LoginPayload, headless: bool = Query(False)):
     return await palagina_login_worker(payload=payload, headless=headless)
@@ -45,7 +36,7 @@ async def palagina_login(payload: LoginPayload, headless: bool = Query(False)):
 
 @app.post("/palagina/nuovo-progetto")
 async def palagina_nuovo_progetto(
-    payload: NuovoProgettoPayload,
+    payload: NuovoProgettoPayload = Body(..., example=EXAMPLE_NUOVO_PROGETTO),
     headless: bool = Query(False),
 ):
     return await palagina_nuovo_progetto_worker(payload=payload, headless=headless)

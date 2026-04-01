@@ -13,3 +13,5 @@ class PalaginaState(Base):
     name: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
     cookies: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     origins: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+
+
