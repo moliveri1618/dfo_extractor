@@ -19,7 +19,7 @@ Base.metadata.create_all(bind=engine)
 import sys
 
 sys.path.append("/Users/mauro/Documents/plawright_worker")
-from palagina_worker import palagina_nuovo_progetto_worker
+from lambda_handler import handler
 
 #######################################################################################
 #######################################################################################
@@ -58,14 +58,20 @@ async def palagina_nuovo_progetto(
             detail="Another Palagina create-project flow is already in progress.",
         )
 
-    result = await palagina_nuovo_progetto_worker(
-        payload=payload,
-        headless=headless,
-        storage_state=storage_state,
-        lock_name=PALAGINA_CREATE_LOCK_NAME,
-        owner_id=owner_id,
-        release_url=RELEASE_URL,
-    )
+    event = {
+        "site": "palagina",
+        "action": "nuovo_progetto",
+        "payload": payload.model_dump(),
+        "headless": headless,
+        "storage_state": storage_state,
+        "lock": {
+            "lock_name": PALAGINA_CREATE_LOCK_NAME,
+            "owner_id": owner_id,
+            "release_url": RELEASE_URL,
+        },
+    }
+
+    result = await handler(event, None)
 
     updated_storage_state = result.get("updated_storage_state")
     if updated_storage_state is not None:
