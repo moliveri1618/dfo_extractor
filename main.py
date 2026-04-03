@@ -7,7 +7,8 @@ from dependencies import get_db
 from state_service import get_palagina_storage_state, save_palagina_storage_state
 from lock_service import acquire_lock, release_lock, renew_lock, get_lock_status
 from schemas_lock import ReleaseLockPayload, RenewLockPayload
-import asyncio
+import json
+
 
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
@@ -71,13 +72,17 @@ async def palagina_nuovo_progetto(
         },
     }
 
-    result = await handler(event, None)
+    # export event for local lambda testing
+    with open("event.json", "w", encoding="utf-8") as f:
+        json.dump(event, f, indent=2, ensure_ascii=False, default=str)
 
-    updated_storage_state = result.get("updated_storage_state")
-    if updated_storage_state is not None:
-        save_palagina_storage_state(db, updated_storage_state)
+    # result = await handler(event, None)
 
-    return result
+    # updated_storage_state = result.get("updated_storage_state")
+    # if updated_storage_state is not None:
+    #     save_palagina_storage_state(db, updated_storage_state)
+
+    # return result
 
 
 @app.post("/locks/release")
