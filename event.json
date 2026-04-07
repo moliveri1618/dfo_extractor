@@ -205,7 +205,7 @@
   },
   "lock": {
     "lock_name": "palagina_nuovo_progetto_create",
-    "owner_id": "e963b002-eade-4316-94d2-a211b8bf54e8",
+    "owner_id": "52f31640-9288-425c-a660-b1fadb842040",
     "release_url": "http://127.0.0.1:8000/locks/release"
   }
 }

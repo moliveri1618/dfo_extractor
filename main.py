@@ -20,7 +20,7 @@ Base.metadata.create_all(bind=engine)
 import sys
 
 sys.path.append("/Users/mauro/Documents/plawright_worker")
-from lambda_handler import handler
+from palagina.worker import palagina_nuovo_progetto_worker
 
 #######################################################################################
 #######################################################################################
@@ -59,30 +59,37 @@ async def palagina_nuovo_progetto(
             detail="Another Palagina create-project flow is already in progress.",
         )
 
-    event = {
-        "site": "palagina",
-        "action": "nuovo_progetto",
-        "payload": payload.model_dump(),
-        "headless": headless,
-        "storage_state": storage_state,
-        "lock": {
-            "lock_name": PALAGINA_CREATE_LOCK_NAME,
-            "owner_id": owner_id,
-            "release_url": RELEASE_URL,
-        },
-    }
+    # event = {
+    #     "site": "palagina",
+    #     "action": "nuovo_progetto",
+    #     "payload": payload.model_dump(),
+    #     "headless": headless,
+    #     "storage_state": storage_state,
+    #     "lock": {
+    #         "lock_name": PALAGINA_CREATE_LOCK_NAME,
+    #         "owner_id": owner_id,
+    #         "release_url": RELEASE_URL,
+    #     },
+    # }
 
-    # export event for local lambda testing
-    with open("event.json", "w", encoding="utf-8") as f:
-        json.dump(event, f, indent=2, ensure_ascii=False, default=str)
+    # # export event for local lambda testing
+    # with open("event.json", "w", encoding="utf-8") as f:
+    #     json.dump(event, f, indent=2, ensure_ascii=False, default=str)
 
-    # result = await handler(event, None)
+    result = await palagina_nuovo_progetto_worker(
+        payload=payload,
+        headless=headless,
+        storage_state=storage_state,
+        lock_name=PALAGINA_CREATE_LOCK_NAME,
+        owner_id=owner_id,
+        release_url=RELEASE_URL,
+    )
 
-    # updated_storage_state = result.get("updated_storage_state")
-    # if updated_storage_state is not None:
-    #     save_palagina_storage_state(db, updated_storage_state)
+    updated_storage_state = result.get("updated_storage_state")
+    if updated_storage_state is not None:
+        save_palagina_storage_state(db, updated_storage_state)
 
-    # return result
+    return result
 
 
 @app.post("/locks/release")
