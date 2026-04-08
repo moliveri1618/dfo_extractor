@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from schemas.palagina_schemas import NuovoProgettoPayload
-from services.state_service import (
+from repositories.palagina_repository import (
     get_palagina_storage_state, 
     save_palagina_storage_state
 )

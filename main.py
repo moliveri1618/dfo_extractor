@@ -4,9 +4,9 @@ from sqlalchemy.orm import Session
 from schemas.palagina_schemas import NuovoProgettoPayload, EXAMPLE_NUOVO_PROGETTO
 from core.db import engine, Base
 from routers.dependencies import get_db
-from services.state_service import get_palagina_storage_state, save_palagina_storage_state
-from lock_service import acquire_lock, release_lock, renew_lock, get_lock_status
-from schemas_lock import ReleaseLockPayload, RenewLockPayload
+from repositories.palagina_repository import get_palagina_storage_state, save_palagina_storage_state
+from repositories.locks_repository import acquire_lock, release_lock, renew_lock, get_lock_status
+from schemas.locks_schema import ReleaseLockPayload, RenewLockPayload
 import json
 from routers.v1.palagina_router import router as palagina_router
 # from routers.v1.locks_router import router as locks_router
