@@ -2,8 +2,8 @@ from fastapi import FastAPI, HTTPException, Query, Body, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from schemas import NuovoProgettoPayload, EXAMPLE_NUOVO_PROGETTO
-from db import engine, Base
-from dependencies import get_db
+from core.db import engine, Base
+from routers.dependencies import get_db
 from state_service import get_palagina_storage_state, save_palagina_storage_state
 from lock_service import acquire_lock, release_lock, renew_lock, get_lock_status
 from schemas_lock import ReleaseLockPayload, RenewLockPayload
