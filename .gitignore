@@ -37,3 +37,5 @@ playwright/.cache/
 # FastAPI / Uvicorn
 # -----------------------
 *.sqlite3
+
+event.json

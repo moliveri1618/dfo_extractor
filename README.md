@@ -28,3 +28,11 @@ source venv/bin/activate
 ```bash
 python -m pip install -r requirements.txt
 ```
+
+
+### 4. Install dependencies
+
+
+```bash
+uvicorn main:app --reload
+```
