@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from sqlalchemy.orm import Session
 
-from models.locks_models import DistributedLock
+from models.lock_models import DistributedLock
 
 
 def utcnow() -> datetime:

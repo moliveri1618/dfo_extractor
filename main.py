@@ -5,11 +5,11 @@ from schemas.palagina_schemas import NuovoProgettoPayload, EXAMPLE_NUOVO_PROGETT
 from core.db import engine, Base
 from routers.dependencies import get_db
 from repositories.palagina_repository import get_palagina_storage_state, save_palagina_storage_state
-from repositories.locks_repository import acquire_lock, release_lock, renew_lock, get_lock_status
-from schemas.locks_schema import ReleaseLockPayload, RenewLockPayload
+from repositories.lock_repository import acquire_lock, release_lock, renew_lock, get_lock_status
+from schemas.lock_schema import ReleaseLockPayload, RenewLockPayload
 import json
 from routers.v1.palagina_router import router as palagina_router
-from routers.v1.locks_router import router as locks_router
+from routers.v1.lock_router import router as locks_router
 
 
 app = FastAPI()

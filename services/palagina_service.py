@@ -5,7 +5,7 @@ from repositories.palagina_repository import (
     get_palagina_storage_state, 
     save_palagina_storage_state
 )
-from repositories.locks_repository import acquire_lock
+from repositories.lock_repository import acquire_lock
 from core.config import (
     PALAGINA_CREATE_LOCK_NAME,
     RELEASE_URL,

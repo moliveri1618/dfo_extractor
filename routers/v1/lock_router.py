@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from routers.dependencies import get_db
-from schemas.locks_schema import ReleaseLockPayload, RenewLockPayload
-from repositories.locks_repository import release_lock, renew_lock, get_lock_status
+from schemas.lock_schema import ReleaseLockPayload, RenewLockPayload
+from repositories.lock_repository import release_lock, renew_lock, get_lock_status
 
 router = APIRouter()
 
