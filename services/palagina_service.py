@@ -1,13 +1,15 @@
 from sqlalchemy.orm import Session
-
+from fastapi import HTTPException
 from schemas.palagina_schemas import NuovoProgettoPayload
 from repositories.palagina_repository import (
     get_palagina_storage_state, 
     save_palagina_storage_state
 )
+from repositories.locks_repository import acquire_lock
 from core.config import (
     PALAGINA_CREATE_LOCK_NAME,
     RELEASE_URL,
+    LOCK_LEASE_SECONDS,
 )
 
 #######################################################################################
@@ -27,11 +29,24 @@ async def run_nuovo_progetto(
 ):
     storage_state = get_palagina_storage_state(db)
 
+    acquired, owner_id = acquire_lock(
+        db=db,
+        lock_name=PALAGINA_CREATE_LOCK_NAME,
+        lease_seconds=LOCK_LEASE_SECONDS,
+    )
+
+    if not acquired or not owner_id:
+        raise HTTPException(
+            status_code=409,
+            detail="Another Palagina create-project flow is already in progress.",
+        )
+
     result = await palagina_nuovo_progetto_worker(
         payload=payload,
         headless=headless,
         storage_state=storage_state,
         lock_name=PALAGINA_CREATE_LOCK_NAME,
+        owner_id=owner_id,
         release_url=RELEASE_URL,
     )
 
