@@ -47,17 +47,17 @@ async def palagina_nuovo_progetto(
 ):
     storage_state = get_palagina_storage_state(db)
 
-    acquired, owner_id = acquire_lock(
-        db=db,
-        lock_name=PALAGINA_CREATE_LOCK_NAME,
-        lease_seconds=LOCK_LEASE_SECONDS,
-    )
+    # acquired, owner_id = acquire_lock(
+    #     db=db,
+    #     lock_name=PALAGINA_CREATE_LOCK_NAME,
+    #     lease_seconds=LOCK_LEASE_SECONDS,
+    # )
 
-    if not acquired or not owner_id:
-        raise HTTPException(
-            status_code=409,
-            detail="Another Palagina create-project flow is already in progress.",
-        )
+    # if not acquired or not owner_id:
+    #     raise HTTPException(
+    #         status_code=409,
+    #         detail="Another Palagina create-project flow is already in progress.",
+    #     )
 
     # event = {
     #     "site": "palagina",
@@ -81,7 +81,7 @@ async def palagina_nuovo_progetto(
         headless=headless,
         storage_state=storage_state,
         lock_name=PALAGINA_CREATE_LOCK_NAME,
-        owner_id=owner_id,
+        # owner_id=owner_id,
         release_url=RELEASE_URL,
     )
 
