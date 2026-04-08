@@ -30,7 +30,7 @@ python -m pip install -r requirements.txt
 ```
 
 
-### 4. Install dependencies
+### 4. Run the api
 
 
 ```bash
