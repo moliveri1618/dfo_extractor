@@ -1,13 +1,15 @@
 from fastapi import FastAPI, HTTPException, Query, Body, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from schemas import NuovoProgettoPayload, EXAMPLE_NUOVO_PROGETTO
+from schemas.palagina_schemas import NuovoProgettoPayload, EXAMPLE_NUOVO_PROGETTO
 from core.db import engine, Base
 from routers.dependencies import get_db
-from state_service import get_palagina_storage_state, save_palagina_storage_state
+from services.state_service import get_palagina_storage_state, save_palagina_storage_state
 from lock_service import acquire_lock, release_lock, renew_lock, get_lock_status
 from schemas_lock import ReleaseLockPayload, RenewLockPayload
 import json
+from routers.v1.palagina_router import router as palagina_router
+# from routers.v1.locks_router import router as locks_router
 
 
 app = FastAPI()
@@ -35,61 +37,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-PALAGINA_CREATE_LOCK_NAME = "palagina_nuovo_progetto_create"
-LOCK_LEASE_SECONDS = 120
-RELEASE_URL = "http://127.0.0.1:8000/locks/release"
-
-@app.post("/palagina/nuovo-progetto")
-async def palagina_nuovo_progetto(
-    payload: NuovoProgettoPayload = Body(..., example=EXAMPLE_NUOVO_PROGETTO),
-    headless: bool = Query(False),
-    db: Session = Depends(get_db),
-):
-    storage_state = get_palagina_storage_state(db)
-
-    # acquired, owner_id = acquire_lock(
-    #     db=db,
-    #     lock_name=PALAGINA_CREATE_LOCK_NAME,
-    #     lease_seconds=LOCK_LEASE_SECONDS,
-    # )
-
-    # if not acquired or not owner_id:
-    #     raise HTTPException(
-    #         status_code=409,
-    #         detail="Another Palagina create-project flow is already in progress.",
-    #     )
-
-    # event = {
-    #     "site": "palagina",
-    #     "action": "nuovo_progetto",
-    #     "payload": payload.model_dump(),
-    #     "headless": headless,
-    #     "storage_state": storage_state,
-    #     "lock": {
-    #         "lock_name": PALAGINA_CREATE_LOCK_NAME,
-    #         "owner_id": owner_id,
-    #         "release_url": RELEASE_URL,
-    #     },
-    # }
-
-    # # export event for local lambda testing
-    # with open("event.json", "w", encoding="utf-8") as f:
-    #     json.dump(event, f, indent=2, ensure_ascii=False, default=str)
-
-    result = await palagina_nuovo_progetto_worker(
-        payload=payload,
-        headless=headless,
-        storage_state=storage_state,
-        lock_name=PALAGINA_CREATE_LOCK_NAME,
-        # owner_id=owner_id,
-        release_url=RELEASE_URL,
-    )
-
-    updated_storage_state = result.get("updated_storage_state")
-    if updated_storage_state is not None:
-        save_palagina_storage_state(db, updated_storage_state)
-
-    return result
+app.include_router(palagina_router, prefix="/palagina", tags=["Palagina"])
+# app.include_router(locks_router, prefix="/locks", tags=["Locks"])
 
 
 @app.post("/locks/release")
