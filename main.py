@@ -1,13 +1,13 @@
-from fastapi import FastAPI, HTTPException, Query, Body, Depends
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
-from schemas.palagina_schemas import NuovoProgettoPayload, EXAMPLE_NUOVO_PROGETTO
+# from sqlalchemy.orm import Session
+# from schemas.palagina_schemas import NuovoProgettoPayload, EXAMPLE_NUOVO_PROGETTO
 from core.db import engine, Base
-from routers.dependencies import get_db
-from repositories.palagina_repository import get_palagina_storage_state, save_palagina_storage_state
-from repositories.lock_repository import acquire_lock, release_lock, renew_lock, get_lock_status
-from schemas.lock_schema import ReleaseLockPayload, RenewLockPayload
-import json
+# from routers.dependencies import get_db
+# from repositories.palagina_repository import get_palagina_storage_state, save_palagina_storage_state
+# from repositories.lock_repository import acquire_lock, release_lock, renew_lock, get_lock_status
+# from schemas.lock_schema import ReleaseLockPayload, RenewLockPayload
+# import json
 from routers.v1.palagina_router import router as palagina_router
 from routers.v1.lock_router import router as locks_router
 
@@ -38,7 +38,7 @@ app.add_middleware(
 )
 
 app.include_router(palagina_router, prefix="/palagina", tags=["Palagina"])
-app.include_router(locks_router, prefix="/locks", tags=["Locks"])
+# app.include_router(locks_router, prefix="/locks", tags=["Locks"])
 
 
 # @app.post("/locks/release")
