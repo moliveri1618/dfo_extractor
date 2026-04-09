@@ -1,9 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from api.routers.dependencies import get_db
-from api.schemas.lock_schema import ReleaseLockPayload, RenewLockPayload
-from api.repositories.lock_repository import release_lock, renew_lock, get_lock_status
+import os
+import sys
+if os.getenv("GITHUB_ACTIONS"):
+    sys.path.append(os.path.dirname(__file__))
+
+from routers.dependencies import get_db
+from schemas.lock_schema import ReleaseLockPayload, RenewLockPayload
+from repositories.lock_repository import release_lock, renew_lock, get_lock_status
 
 router = APIRouter()
 

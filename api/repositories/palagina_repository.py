@@ -1,5 +1,13 @@
 from sqlalchemy.orm import Session
-from api.models.palagina_models import PalaginaState
+
+import os
+import sys
+
+if os.getenv("GITHUB_ACTIONS"):
+    sys.path.append(os.path.dirname(__file__))
+
+    
+from models.palagina_models import PalaginaState
 
 PALAGINA_STATE_NAME = "palagina"
 

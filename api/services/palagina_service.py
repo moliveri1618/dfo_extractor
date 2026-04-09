@@ -1,12 +1,18 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from api.schemas.palagina_schemas import NuovoProgettoPayload
-from api.repositories.palagina_repository import (
+
+import os
+import sys
+if os.getenv("GITHUB_ACTIONS"):
+    sys.path.append(os.path.dirname(__file__))
+
+from schemas.palagina_schemas import NuovoProgettoPayload
+from repositories.palagina_repository import (
     get_palagina_storage_state, 
     save_palagina_storage_state
 )
-from api.repositories.lock_repository import acquire_lock
-from api.core.config import (
+from repositories.lock_repository import acquire_lock
+from core.config import (
     PALAGINA_CREATE_LOCK_NAME,
     RELEASE_URL,
     LOCK_LEASE_SECONDS,

@@ -1,15 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
+import sys
+
 # from sqlalchemy.orm import Session
 # from schemas.palagina_schemas import NuovoProgettoPayload, EXAMPLE_NUOVO_PROGETTO
-from api.core.db import engine, Base
+
+if os.getenv("GITHUB_ACTIONS"):
+    sys.path.append(os.path.dirname(__file__))
 # from routers.dependencies import get_db
 # from repositories.palagina_repository import get_palagina_storage_state, save_palagina_storage_state
 # from repositories.lock_repository import acquire_lock, release_lock, renew_lock, get_lock_status
 # from schemas.lock_schema import ReleaseLockPayload, RenewLockPayload
 # import json
-from api.routers.v1.palagina_router import router as palagina_router
-from api.routers.v1.lock_router import router as locks_router
+from core.db import engine, Base
+from routers.v1.palagina_router import router as palagina_router
+from routers.v1.lock_router import router as locks_router
 
 
 app = FastAPI()

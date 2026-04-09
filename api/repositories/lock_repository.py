@@ -1,9 +1,13 @@
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
-
 from sqlalchemy.orm import Session
 
-from api.models.lock_models import DistributedLock
+import os
+import sys
+if os.getenv("GITHUB_ACTIONS"):
+    sys.path.append(os.path.dirname(__file__))
+
+from models.lock_models import DistributedLock
 
 
 def utcnow() -> datetime:
