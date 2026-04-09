@@ -35,10 +35,10 @@ handler = Mangum(app)
 #######################################################################################
 #### just for local, in prod lambda invoke the workers directly and remove this #######
 #######################################################################################
-# import sys
+import sys
 
-# sys.path.append("/Users/mauro/Documents/plawright_worker")
-# from palagina.worker import palagina_nuovo_progetto_worker
+sys.path.append("/Users/mauro/Documents/plawright_worker")
+from palagina.worker import palagina_nuovo_progetto_worker
 
 #######################################################################################
 #######################################################################################
