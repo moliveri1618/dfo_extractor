@@ -22,7 +22,7 @@ router = APIRouter()
 #     return await run_nuovo_progetto(db=db, payload=payload, headless=headless)
 
 
-@router.post("/test-test")
-async def test_test(
+@router.post("/test-test-Y000")
+async def test_testYOOO(
 ):
     return 'stocazzooooo'

@@ -17,16 +17,14 @@ if os.getenv("GITHUB_ACTIONS"):
 # import json
 from core.db import engine, Base
 import models
-# from routers.v1.palagina_router import router as palagina_router
+from routers.v1.palagina_router import router as palagina_router
 # from routers.v1.lock_router import router as locks_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # startup
     Base.metadata.create_all(bind=engine)
     yield
-    # shutdown (optional)
 
 
 app = FastAPI(lifespan=lifespan)
@@ -55,7 +53,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(palagina_router, prefix="/palagina", tags=["Palagina"])
+app.include_router(palagina_router, prefix="/palagina", tags=["Palagina"])
 # app.include_router(locks_router, prefix="/locks", tags=["Locks"])
 
 
