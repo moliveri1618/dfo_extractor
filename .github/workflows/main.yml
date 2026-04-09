@@ -3,7 +3,7 @@ name: gestionale_upload_images_s3
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   CI:
