@@ -21,10 +21,10 @@ from core.config import (
 #######################################################################################
 #### just for local, in prod lambda invoke the workers directly and remove this #######
 #######################################################################################
-import sys
+# import sys
 
-sys.path.append("/Users/mauro/Documents/plawright_worker")
-from palagina.worker import palagina_nuovo_progetto_worker
+# sys.path.append("/Users/mauro/Documents/plawright_worker")
+# from palagina.worker import palagina_nuovo_progetto_worker
 
 #######################################################################################
 #######################################################################################
@@ -66,14 +66,14 @@ async def run_nuovo_progetto(
         "message": "Worker bypassed for testing",
         "updated_storage_state": storage_state,
     }
-    result = await palagina_nuovo_progetto_worker(
-        payload=payload,
-        headless=headless,
-        storage_state=storage_state,
-        lock_name=PALAGINA_CREATE_LOCK_NAME,
-        owner_id='12312',
-        release_url=RELEASE_URL,
-    )
+    # result = await palagina_nuovo_progetto_worker(
+    #     payload=payload,
+    #     headless=headless,
+    #     storage_state=storage_state,
+    #     lock_name=PALAGINA_CREATE_LOCK_NAME,
+    #     owner_id='12312',
+    #     release_url=RELEASE_URL,
+    # )
 
     updated_storage_state = result.get("updated_storage_state")
     if updated_storage_state is not None:
