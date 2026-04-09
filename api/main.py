@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from mangum import Mangum
 import os
 import sys
 
@@ -19,6 +20,7 @@ if os.getenv("GITHUB_ACTIONS"):
 
 
 app = FastAPI()
+handler = Mangum(app=app)
 # Base.metadata.create_all(bind=engine)
 
 
