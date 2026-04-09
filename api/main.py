@@ -18,7 +18,7 @@ if os.getenv("GITHUB_ACTIONS"):
 from core.db import engine, Base
 import models
 from routers.v1.palagina_router import router as palagina_router
-# from routers.v1.lock_router import router as locks_router
+from routers.v1.lock_router import router as locks_router
 
 
 @asynccontextmanager
@@ -54,7 +54,7 @@ app.add_middleware(
 )
 
 app.include_router(palagina_router, prefix="/palagina", tags=["Palagina"])
-# app.include_router(locks_router, prefix="/locks", tags=["Locks"])
+app.include_router(locks_router, prefix="/locks", tags=["Locks"])
 
 
 @app.post("/test-test")
