@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
+from contextlib import asynccontextmanager
 import os
 import sys
 
@@ -14,13 +15,21 @@ from routers.dependencies import get_db
 # from repositories.lock_repository import acquire_lock, release_lock, renew_lock, get_lock_status
 # from schemas.lock_schema import ReleaseLockPayload, RenewLockPayload
 # import json
-# from core.db import engine, Base
+from core.db import engine, Base
 # from routers.v1.palagina_router import router as palagina_router
 # from routers.v1.lock_router import router as locks_router
 
 
-app = FastAPI()
-handler = Mangum(app, lifespan="off")  
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # startup
+    Base.metadata.create_all(bind=engine)
+    yield
+    # shutdown (optional)
+
+
+app = FastAPI(lifespan=lifespan)
+handler = Mangum(app)
 # Base.metadata.create_all(bind=engine)
 
 
