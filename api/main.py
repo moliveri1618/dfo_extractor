@@ -43,8 +43,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(palagina_router, prefix="/palagina", tags=["Palagina"])
+# app.include_router(palagina_router, prefix="/palagina", tags=["Palagina"])
 # app.include_router(locks_router, prefix="/locks", tags=["Locks"])
+
+
+@app.post("/test-test")
+async def test_test():
+    return "stocazzooooo"
 
 
 # @app.post("/locks/release")
