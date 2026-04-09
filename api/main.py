@@ -20,7 +20,7 @@ if os.getenv("GITHUB_ACTIONS"):
 
 
 app = FastAPI()
-handler = Mangum(app=app)
+handler = Mangum(app, lifespan="off")  
 # Base.metadata.create_all(bind=engine)
 
 
