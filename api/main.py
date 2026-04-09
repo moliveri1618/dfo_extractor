@@ -13,9 +13,9 @@ if os.getenv("GITHUB_ACTIONS"):
 # from repositories.lock_repository import acquire_lock, release_lock, renew_lock, get_lock_status
 # from schemas.lock_schema import ReleaseLockPayload, RenewLockPayload
 # import json
-from core.db import engine, Base
-from routers.v1.palagina_router import router as palagina_router
-from routers.v1.lock_router import router as locks_router
+# from core.db import engine, Base
+# from routers.v1.palagina_router import router as palagina_router
+# from routers.v1.lock_router import router as locks_router
 
 
 app = FastAPI()
