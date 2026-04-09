@@ -10,12 +10,13 @@ import sys
 
 if os.getenv("GITHUB_ACTIONS"):
     sys.path.append(os.path.dirname(__file__))
-from routers.dependencies import get_db
+# from routers.dependencies import get_db
 # from repositories.palagina_repository import get_palagina_storage_state, save_palagina_storage_state
 # from repositories.lock_repository import acquire_lock, release_lock, renew_lock, get_lock_status
 # from schemas.lock_schema import ReleaseLockPayload, RenewLockPayload
 # import json
 from core.db import engine, Base
+import models
 # from routers.v1.palagina_router import router as palagina_router
 # from routers.v1.lock_router import router as locks_router
 
