@@ -34,12 +34,17 @@ async def run_nuovo_progetto(
     db: Session, payload: NuovoProgettoPayload, headless: bool
 ):
     storage_state = get_palagina_storage_state(db)
+    print("storage_state loaded:")
+    print(storage_state)
 
     acquired, owner_id = acquire_lock(
         db=db,
         lock_name=PALAGINA_CREATE_LOCK_NAME,
         lease_seconds=LOCK_LEASE_SECONDS,
     )
+    print("lock acquisition result:")
+    print(f"acquired = {acquired}")
+    print(f"owner_id = {owner_id}")
 
     if not acquired or not owner_id:
         raise HTTPException(
@@ -47,6 +52,20 @@ async def run_nuovo_progetto(
             detail="Another Palagina create-project flow is already in progress.",
         )
 
+    print("payload received:")
+    print(payload)
+    print("headless:")
+    print(headless)
+    print("lock_name:")
+    print(PALAGINA_CREATE_LOCK_NAME)
+    print("release_url:")
+    print(RELEASE_URL)
+    # Simulate fake worker result
+    result = {
+        "status": "success",
+        "message": "Worker bypassed for testing",
+        "updated_storage_state": storage_state,
+    }
     # result = await palagina_nuovo_progetto_worker(
     #     payload=payload,
     #     headless=headless,
@@ -56,12 +75,12 @@ async def run_nuovo_progetto(
     #     release_url=RELEASE_URL,
     # )
 
-    # updated_storage_state = result.get("updated_storage_state")
-    # if updated_storage_state is not None:
-    #     save_palagina_storage_state(db, updated_storage_state)
+    updated_storage_state = result.get("updated_storage_state")
+    if updated_storage_state is not None:
+        save_palagina_storage_state(db, updated_storage_state)
+        print("storage_state saved successfully")
 
-    # return result
-    return 1
+    return result
 
 
 # PALAGINA_CREATE_LOCK_NAME = "palagina_nuovo_progetto_create"
