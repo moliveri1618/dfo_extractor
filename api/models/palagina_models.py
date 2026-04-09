@@ -2,7 +2,7 @@ from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import Column, String, DateTime
-from core.db import Base
+from api.core.db import Base
 
 
 class PalaginaState(Base):

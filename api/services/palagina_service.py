@@ -1,12 +1,12 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from schemas.palagina_schemas import NuovoProgettoPayload
-from repositories.palagina_repository import (
+from api.schemas.palagina_schemas import NuovoProgettoPayload
+from api.repositories.palagina_repository import (
     get_palagina_storage_state, 
     save_palagina_storage_state
 )
-from repositories.lock_repository import acquire_lock
-from core.config import (
+from api.repositories.lock_repository import acquire_lock
+from api.core.config import (
     PALAGINA_CREATE_LOCK_NAME,
     RELEASE_URL,
     LOCK_LEASE_SECONDS,

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.palagina_models import PalaginaState
+from api.models.palagina_models import PalaginaState
 
 PALAGINA_STATE_NAME = "palagina"
 
