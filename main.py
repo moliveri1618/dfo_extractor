@@ -13,16 +13,16 @@ from routers.v1.lock_router import router as locks_router
 
 
 app = FastAPI()
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 
 #######################################################################################
 #### just for local, in prod lambda invoke the workers directly and remove this #######
 #######################################################################################
-import sys
+# import sys
 
-sys.path.append("/Users/mauro/Documents/plawright_worker")
-from palagina.worker import palagina_nuovo_progetto_worker
+# sys.path.append("/Users/mauro/Documents/plawright_worker")
+# from palagina.worker import palagina_nuovo_progetto_worker
 
 #######################################################################################
 #######################################################################################
