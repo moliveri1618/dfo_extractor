@@ -5,18 +5,9 @@ from contextlib import asynccontextmanager
 import os
 import sys
 
-# from sqlalchemy.orm import Session
-# from schemas.palagina_schemas import NuovoProgettoPayload, EXAMPLE_NUOVO_PROGETTO
-
 if os.getenv("GITHUB_ACTIONS"):
     sys.path.append(os.path.dirname(__file__))
-# from routers.dependencies import get_db
-# from repositories.palagina_repository import get_palagina_storage_state, save_palagina_storage_state
-# from repositories.lock_repository import acquire_lock, release_lock, renew_lock, get_lock_status
-# from schemas.lock_schema import ReleaseLockPayload, RenewLockPayload
-# import json
 from core.db import engine, Base
-import models
 from routers.v1.palagina_router import router as palagina_router
 from routers.v1.lock_router import router as locks_router
 
@@ -29,16 +20,15 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 handler = Mangum(app)
-# Base.metadata.create_all(bind=engine)
 
 
 #######################################################################################
 #### just for local, in prod lambda invoke the workers directly and remove this #######
 #######################################################################################
-import sys
+# import sys
 
-sys.path.append("/Users/mauro/Documents/plawright_worker")
-from palagina.worker import palagina_nuovo_progetto_worker
+# sys.path.append("/Users/mauro/Documents/plawright_worker")
+# from palagina.worker import palagina_nuovo_progetto_worker
 
 #######################################################################################
 #######################################################################################
@@ -62,50 +52,4 @@ async def test_test():
     return "stocazzooooo"
 
 
-# @app.post("/locks/release")
-# def release_lock_endpoint(
-#     payload: ReleaseLockPayload,
-#     db: Session = Depends(get_db),
-# ):
-#     ok = release_lock(
-#         db=db,
-#         lock_name=payload.lock_name,
-#         owner_id=payload.owner_id,
-#     )
 
-#     if not ok:
-#         raise HTTPException(
-#             status_code=404,
-#             detail="Lock not found, expired, or owner_id mismatch.",
-#         )
-
-#     return {"success": True}
-
-
-# @app.post("/locks/renew")
-# def renew_lock_endpoint(
-#     payload: RenewLockPayload,
-#     db: Session = Depends(get_db),
-# ):
-#     ok = renew_lock(
-#         db=db,
-#         lock_name=payload.lock_name,
-#         owner_id=payload.owner_id,
-#         lease_seconds=payload.lease_seconds,
-#     )
-
-#     if not ok:
-#         raise HTTPException(
-#             status_code=404,
-#             detail="Lock not found, expired, or owner_id mismatch.",
-#         )
-
-#     return {"success": True}
-
-
-# @app.get("/locks/status")
-# def lock_status(
-#     lock_name: str = Query(...),
-#     db: Session = Depends(get_db),
-# ):
-#     return get_lock_status(db, lock_name)
