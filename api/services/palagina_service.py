@@ -42,20 +42,20 @@ async def run_nuovo_progetto(
     lambda_client = boto3.client("lambda", region_name="eu-north-1")
     print(lambda_client)
 
-    # acquired, owner_id = acquire_lock(
-    #     db=db,
-    #     lock_name=PALAGINA_CREATE_LOCK_NAME,
-    #     lease_seconds=LOCK_LEASE_SECONDS,
-    # )
-    # print("lock acquisition result:")
-    # print(f"acquired = {acquired}")
-    # print(f"owner_id = {owner_id}")
+    acquired, owner_id = acquire_lock(
+        db=db,
+        lock_name=PALAGINA_CREATE_LOCK_NAME,
+        lease_seconds=LOCK_LEASE_SECONDS,
+    )
+    print("lock acquisition result:")
+    print(f"acquired = {acquired}")
+    print(f"owner_id = {owner_id}")
 
-    # if not acquired or not owner_id:
-    #     raise HTTPException(
-    #         status_code=409,
-    #         detail="Another Palagina create-project flow is already in progress.",
-    #     )
+    if not acquired or not owner_id:
+        raise HTTPException(
+            status_code=409,
+            detail="Another Palagina create-project flow is already in progress.",
+        )
 
     print("payload received:")
     print(payload)
@@ -89,7 +89,7 @@ async def run_nuovo_progetto(
         "storage_state": storage_state,
         "lock": {
             "lock_name": PALAGINA_CREATE_LOCK_NAME,
-            "owner_id": "123",  # later from acquire_lock
+            "owner_id": owner_id,  # later from acquire_lock
             "release_url": RELEASE_URL,
         },
     }
