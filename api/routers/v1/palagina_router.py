@@ -15,7 +15,7 @@ router = APIRouter()
 
 @router.post("/nuovo-progetto")
 async def palagina_nuovo_progetto(
-    payload: NuovoProgettoPayload = Body(..., example=EXAMPLE_NUOVO_PROGETTO),
+    payload: NuovoProgettoPayload = Body(..., examples=EXAMPLE_NUOVO_PROGETTO),
     headless: bool = Query(True),
     db: Session = Depends(get_db),
 ):

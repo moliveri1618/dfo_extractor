@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+import boto3
+import json
 
 import os
 import sys
@@ -36,6 +38,8 @@ async def run_nuovo_progetto(
     storage_state = get_palagina_storage_state(db)
     print("storage_state loaded:")
     print(storage_state)
+
+    lambda_client = boto3.client("lambda", region_name="eu-north-1")
 
     # acquired, owner_id = acquire_lock(
     #     db=db,
