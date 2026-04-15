@@ -67,11 +67,11 @@ async def run_nuovo_progetto(
     print(RELEASE_URL)
 
     # Simulate fake worker result
-    result = {
-        "status": "success",
-        "message": "Worker bypassed for testing",
-        "updated_storage_state": storage_state,
-    }
+    # result = {
+    #     "status": "success",
+    #     "message": "Worker bypassed for testing",
+    #     "updated_storage_state": storage_state,
+    # }
     # result = await palagina_nuovo_progetto_worker(
     #     payload=payload,
     #     headless=headless,
@@ -80,6 +80,33 @@ async def run_nuovo_progetto(
     #     owner_id='12312',
     #     release_url=RELEASE_URL,
     # )
+
+    event = {
+        "site": "palagina",
+        "action": "nuovo_progetto",
+        "payload": payload.model_dump(mode="json"),
+        "headless": headless,
+        "storage_state": storage_state,
+        "lock": {
+            "lock_name": PALAGINA_CREATE_LOCK_NAME,
+            "owner_id": "123",  # later from acquire_lock
+            "release_url": RELEASE_URL,
+        },
+    }
+
+    response = lambda_client.invoke(
+        FunctionName="playwright_worker",  
+        InvocationType="RequestResponse",
+        Payload=json.dumps(event).encode("utf-8"),
+    )
+
+    print("lambda response raw:", response)
+
+    raw_payload = response["Payload"].read()
+    print("lambda payload raw:", raw_payload)
+
+    result = json.loads(raw_payload)
+    print("lambda result parsed:", result)
 
     updated_storage_state = result.get("updated_storage_state")
     if updated_storage_state is not None:
