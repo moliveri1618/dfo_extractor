@@ -40,6 +40,7 @@ async def run_nuovo_progetto(
     print(storage_state)
 
     lambda_client = boto3.client("lambda", region_name="eu-north-1")
+    print(lambda_client)
 
     # acquired, owner_id = acquire_lock(
     #     db=db,
@@ -64,6 +65,7 @@ async def run_nuovo_progetto(
     print(PALAGINA_CREATE_LOCK_NAME)
     print("release_url:")
     print(RELEASE_URL)
+
     # Simulate fake worker result
     result = {
         "status": "success",
