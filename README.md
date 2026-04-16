@@ -41,8 +41,6 @@ uvicorn main:app --reload
 
 
 
-
-
 {
   "testata": {
     "numero": "9795",
