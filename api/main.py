@@ -10,7 +10,7 @@ if os.getenv("GITHUB_ACTIONS"):
 from core.db import engine, Base
 from routers.v1.palagina_router import router as palagina_router
 from routers.v1.lock_router import router as locks_router
-
+from routers.v1.contract import router as contracts_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -45,11 +45,8 @@ app.add_middleware(
 
 app.include_router(palagina_router, prefix="/palagina", tags=["Palagina"])
 app.include_router(locks_router, prefix="/locks", tags=["Locks"])
-
+app.include_router(contracts_router, prefix="/contracts", tags=["Contracts"])
 
 @app.post("/test-test")
 async def test_test():
     return "stocazzooooo"
-
-
-
