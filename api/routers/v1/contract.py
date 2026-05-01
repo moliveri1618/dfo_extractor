@@ -6,7 +6,7 @@ from .contract_parser_v2 import ContractParserV2
 
 router = APIRouter()
 
-UPLOAD_FOLDER = "uploads"
+UPLOAD_FOLDER = "/tmp/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
