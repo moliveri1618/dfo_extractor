@@ -266,3 +266,77 @@ async def update_contract(contract_id: str, data: dict = Body(...)):
         "message": "Contratto aggiornato",
         "contract_id": contract_id,
     }
+
+
+@router.delete("/api/contracts/{contract_id}")
+async def delete_contract(contract_id: str):
+    if contract_id not in contracts_db:
+        raise HTTPException(status_code=404, detail="Contratto non trovato")
+
+    contract = contracts_db[contract_id]
+
+    pdf_path = contract.get("filepath", "")
+    if pdf_path and os.path.exists(pdf_path):
+        os.remove(pdf_path)
+
+    json_path = os.path.join(DATA_FOLDER, f"contract_{contract_id}.json")
+    if os.path.exists(json_path):
+        os.remove(json_path)
+
+    del contracts_db[contract_id]
+    save_contracts_to_disk()
+
+    return {
+        "success": True,
+        "message": "Contratto eliminato",
+    }
+
+
+@router.get("/api/contracts/{contract_id}/products")
+async def get_contract_products(contract_id: str):
+    if contract_id not in contracts_db:
+        raise HTTPException(status_code=404, detail="Contratto non trovato")
+
+    contract = contracts_db[contract_id]
+
+    return {
+        "contract_id": contract_id,
+        "products": contract.get("products", []),
+    }
+
+
+@router.get("/api/export/{contract_id}")
+async def export_contract(contract_id: str):
+    if contract_id not in contracts_db:
+        raise HTTPException(status_code=404, detail="Contratto non trovato")
+
+    contract = contracts_db[contract_id]
+    header = contract.get("header", {})
+    products = contract.get("products", [])
+
+    export_rows = []
+
+    for i, product in enumerate(products):
+        row = {
+            "contratto_numero": header.get("numero", ""),
+            "contratto_data": header.get("data", ""),
+            "committente": header.get("committente", ""),
+            "luogo_zona": header.get("luogo_zona", ""),
+            "riga": i + 1,
+            "quantita": product.get("articolo_info", {}).get("quantita", 1),
+            "tipologia": product.get("articolo_info", {}).get("tipologia", ""),
+            "misure": product.get("measures", ""),
+            "riferimento_vano": product.get("riferimento_vano", ""),
+            "note": product.get("note", ""),
+        }
+
+        for field_name, value in product.get("fields", {}).items():
+            row[field_name] = value
+
+        export_rows.append(row)
+
+    return {
+        "contract_id": contract_id,
+        "header": header,
+        "rows": export_rows,
+    }
