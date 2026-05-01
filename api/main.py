@@ -47,6 +47,7 @@ app.include_router(palagina_router, prefix="/palagina", tags=["Palagina"])
 app.include_router(locks_router, prefix="/locks", tags=["Locks"])
 app.include_router(contracts_router, prefix="/contracts", tags=["Contracts"])
 
+
 @app.post("/test-test")
 async def test_test():
     return "stocazzooooo"
